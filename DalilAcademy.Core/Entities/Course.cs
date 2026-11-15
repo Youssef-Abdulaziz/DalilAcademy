@@ -5,10 +5,9 @@
         public int Id { get; set; }
         public string Title { get; set; }
         public decimal Price { get; set; }
-
-        public string Level { get; set; } = "Beginner";
-
         public int InstructorId { get; set; }
+
+        public string? ImageUrl { get; set; }
         public Instructor? Instructor { get; set; }
         public List<Enrollment> Enrollments { get; set; } = [];
 

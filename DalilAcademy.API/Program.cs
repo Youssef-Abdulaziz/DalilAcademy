@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using DalilAcademy.Core.Storage;
+using DalilAcademy.Infra.Storage;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -45,7 +47,13 @@ builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddSingleton<ITokenService, JwtTokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+builder.Services.AddSingleton<IImageService, LocalImageService>();
 
+builder.Services.AddHttpClient<ICurrencyService, CurrencyService>(client =>
+{
+    client.BaseAddress = new Uri($"{builder.Configuration["ExchangeRate:BaseUrl"]}{builder.Configuration["ExchangeRate:ApiKey"]}/");
+}
+);
 
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
@@ -88,7 +96,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 

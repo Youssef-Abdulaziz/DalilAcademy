@@ -6,12 +6,13 @@ using DalilAcademy.Core.DTOs;
 using System.ComponentModel.DataAnnotations;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
+using DalilAcademy.Core.Storage;
 namespace DalilAcademy.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class CoursesController(ICourseService courseService) : ControllerBase
+    public class CoursesController(ICourseService courseService, IImageService images ) : ControllerBase
     {
         //private readonly ICourseService _courseService;
         //public CoursesController(ICourseService courseService) 
@@ -69,6 +70,16 @@ namespace DalilAcademy.API.Controllers
         public async Task<ActionResult> Delete(int id)
         {
             await courseService.DeleteAsync(id); return NoContent();
+        }
+
+        [HttpPost]
+        [Route("upload-image")]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<ActionResult> UploadImage(IFormFile file) 
+        {
+            await using var stream = file.OpenReadStream();
+            var url = await images.SaveCourseImageAsync(stream, file.FileName, file.Length);
+            return Ok(new { imageUrl = url });
         }
 
 

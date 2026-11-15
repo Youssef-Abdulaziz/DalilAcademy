@@ -30,13 +30,11 @@ namespace DalilAcademy.Infra.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("text");
+
                     b.Property<int>("InstructorId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Level")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
 
                     b.Property<decimal>("Price")
                         .HasPrecision(10, 2)
@@ -61,7 +59,6 @@ namespace DalilAcademy.Infra.Migrations
                         {
                             Id = 1,
                             InstructorId = 1,
-                            Level = "Beginner",
                             Price = 50m,
                             Title = "C# Fundamentals"
                         },
@@ -69,7 +66,6 @@ namespace DalilAcademy.Infra.Migrations
                         {
                             Id = 2,
                             InstructorId = 1,
-                            Level = "Beginner",
                             Price = 80m,
                             Title = "ASP.NET Core Web API"
                         },
@@ -77,7 +73,6 @@ namespace DalilAcademy.Infra.Migrations
                         {
                             Id = 3,
                             InstructorId = 2,
-                            Level = "Beginner",
                             Price = 60m,
                             Title = "PostgreSQL Essentials"
                         });
@@ -220,7 +215,7 @@ namespace DalilAcademy.Infra.Migrations
                         {
                             Id = 1,
                             Email = "admin@dalil.jo",
-                            PasswordHash = "$2a$11$IoZhIS6mihpE5ylk6UFPQO1biCFi9OJtQCTEvLL7q3flPWahgv3W2",
+                            PasswordHash = "$2a$11$F5rHzHpbPVQNmHTkQribheLdaxjU46YeGvUDIeio7sKZ.wyPSwfzy",
                             Role = "Admin"
                         });
                 });

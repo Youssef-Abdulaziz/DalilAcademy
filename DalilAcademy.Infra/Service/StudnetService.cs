@@ -65,7 +65,7 @@ namespace DalilAcademy.Infra.Service
                 ?? throw new NotFoundException($"Student {id} was not found.");
 
             return courses
-                .Select(c => new CourseResponseDto(c.Id, c.Title, c.Price, c.Instructor!.FullName))
+                .Select(c => new CourseResponseDto(c.Id, c.Title, c.Price, c.Instructor!.FullName, c.ImageUrl))
                 .ToList();
         }
     }
