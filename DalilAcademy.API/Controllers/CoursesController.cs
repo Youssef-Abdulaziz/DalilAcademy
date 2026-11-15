@@ -82,6 +82,13 @@ namespace DalilAcademy.API.Controllers
             return Ok(new { imageUrl = url });
         }
 
+        [HttpGet("{courseId:int}/students")]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<ActionResult<List<StudentResponseDto>>> GetPaidStudents(int courseId)
+        {
+            return await courseService.GetPaidStudentsAsync(courseId);
+        }
+
 
     }
 }

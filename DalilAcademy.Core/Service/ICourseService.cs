@@ -15,5 +15,8 @@ namespace DalilAcademy.Core.Service
         Task<CourseResponseDto> CreateAsync(CreateCourseDto dto);
         Task UpdateAsync(int id, Course updated);
         Task DeleteAsync(int id);
+
+        // interface
+        Task<List<StudentResponseDto>> GetPaidStudentsAsync(int courseId);
     }
 }

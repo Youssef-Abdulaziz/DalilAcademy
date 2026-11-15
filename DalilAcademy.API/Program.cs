@@ -55,6 +55,8 @@ builder.Services.AddHttpClient<ICurrencyService, CurrencyService>(client =>
 }
 );
 
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")).LogTo(Console.WriteLine, LogLevel.Information));

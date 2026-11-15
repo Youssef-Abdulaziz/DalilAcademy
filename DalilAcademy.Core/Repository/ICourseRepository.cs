@@ -15,5 +15,7 @@ namespace DalilAcademy.Core.Repository
         Task<Course> CreateAsync(Course course);
         Task UpdateAsync( Course updated);
         Task<bool> DeleteAsync(int id);
+        
+        Task<List<Student>?> GetPaidStudentsAsync(int courseId);
     }
 }

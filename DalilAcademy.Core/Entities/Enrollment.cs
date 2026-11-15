@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DalilAcademy.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,9 @@ namespace DalilAcademy.Core.Entities
         public Student? Student { get; set; }
 
         public DateTime EnrolledAt { get; set; }
+
+        public EnrollmentStatus Status { get; set; } = EnrollmentStatus.Pending;
+        public List<Payment> Payments { get; set; } = [];
 
 
     }

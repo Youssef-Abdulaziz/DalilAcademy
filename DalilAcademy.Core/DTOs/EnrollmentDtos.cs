@@ -8,5 +8,6 @@ namespace DalilAcademy.Core.DTOs
 {
     public record CreateEnrollmentDto(int StudentId, int CourseId);
 
-    public record EnrollmentResponseDto(int Id, int StudentId, int CourseId, DateTime EnrolledAt);
+    public record EnrollmentResponseDto(int Id, int StudentId, int CourseId, DateTime EnrolledAt, string Status);
+    public record UpdateEnrollmentDto(int CourseId);
 }

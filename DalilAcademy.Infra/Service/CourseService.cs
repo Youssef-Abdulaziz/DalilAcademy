@@ -49,5 +49,12 @@ namespace DalilAcademy.Infra.Service
             if (!await courseRepository.DeleteAsync(id))
                  throw new NotFoundException($"Course {id} was not found");
         }
+        public async Task<List<StudentResponseDto>> GetPaidStudentsAsync(int courseId)
+        {
+            var students = await courseRepository.GetPaidStudentsAsync(courseId)
+                ?? throw new NotFoundException($"Course {courseId} was not found.");
+
+            return students.Select(s => s.ToDto()).ToList();
+        }
     }
 }

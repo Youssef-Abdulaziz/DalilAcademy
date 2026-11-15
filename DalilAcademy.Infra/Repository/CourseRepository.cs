@@ -1,5 +1,6 @@
 ﻿using DalilAcademy.Core.DTOs;
 using DalilAcademy.Core.Entities;
+using DalilAcademy.Core.Enums;
 using DalilAcademy.Core.Exceptions;
 using DalilAcademy.Core.Repository;
 using DalilAcademy.Infra.Data;
@@ -72,6 +73,19 @@ namespace DalilAcademy.Infra.Repository
             db.Courses.Remove(course);
             await db.SaveChangesAsync();
             return true;
+        }
+
+        
+        public async Task<List<Student>?> GetPaidStudentsAsync(int courseId)
+        {
+            return await db.Courses
+                .AsNoTracking()
+                .Where(c => c.Id == courseId)
+                .Select(c => c.Enrollments
+                    .Where(e => e.Status == EnrollmentStatus.Paid)
+                    .Select(e => e.Student!)
+                    .ToList())
+                .FirstOrDefaultAsync();      // null = the course doesn't exist
         }
 
     }

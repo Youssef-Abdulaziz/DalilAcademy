@@ -21,6 +21,7 @@ namespace DalilAcademy.Infra.Data.Config
             builder.HasOne(e => e.Course).WithMany(c => c.Enrollments)
             .HasForeignKey(e => e.CourseId);
             builder.Property(e => e.EnrolledAt).HasDefaultValueSql("now()");
+            builder.Property(e => e.Status).HasConversion<string>().HasMaxLength(20);
         }
     }
 }
