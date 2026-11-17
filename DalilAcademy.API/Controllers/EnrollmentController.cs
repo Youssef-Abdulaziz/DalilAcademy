@@ -1,8 +1,10 @@
 ﻿using DalilAcademy.Core.DTOs;
 using DalilAcademy.Core.Entities;
 using DalilAcademy.Core.Enums;
+using DalilAcademy.Core.Payments;
 using DalilAcademy.Core.Repository;
 using DalilAcademy.Core.Service;
+using DalilAcademy.Infra.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -11,7 +13,7 @@ namespace DalilAcademy.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EnrollmentsController(IEnrollmentService enrollmentService, IStudentRepository students) : ControllerBase
+    public class EnrollmentsController(IEnrollmentService enrollmentService, IStudentRepository students, IPaymentGateway gateway, IPaymentService paymentService) : ControllerBase
     {
         [Authorize(Roles = Roles.Admin)]
         [HttpGet]
@@ -68,6 +70,28 @@ namespace DalilAcademy.API.Controllers
                     Course = e.Course.Title,
                     e.EnrolledAt
                 }));
+        }
+
+        [Authorize(Roles = Roles.Admin)]
+        [HttpGet("test-paypal")]
+        public async Task<IActionResult> TestPayPal()
+        {
+            var order = await gateway.CreateOrderAsync(10m);
+            return Ok(order);
+        }
+
+        [Authorize(Roles = Roles.Admin)]
+        [HttpPost("{id:int}/pay")]
+        public async Task<ActionResult<PayResponseDto>> Pay(int id)
+        {
+            return await paymentService.PayAsync(id);
+        }
+
+        [Authorize(Roles = Roles.Admin)]
+        [HttpPost("{id:int}/capture")]
+        public async Task<ActionResult<EnrollmentResponseDto>> Capture(int id)
+        {
+            return await paymentService.CaptureAsync(id);
         }
     }
 }

@@ -1,20 +1,22 @@
 using DalilAcademy.API.Middleware;
+using DalilAcademy.Core.Payments;
 using DalilAcademy.Core.Repository;
 using DalilAcademy.Core.Security;
-
 using DalilAcademy.Core.Service;
+using DalilAcademy.Core.Storage;
 using DalilAcademy.Core.Validators;
 using DalilAcademy.Infra.Data;
+using DalilAcademy.Infra.Payments;
 using DalilAcademy.Infra.Repository;
 using DalilAcademy.Infra.Security;
 using DalilAcademy.Infra.Service;
+using DalilAcademy.Infra.Storage;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using DalilAcademy.Core.Storage;
-using DalilAcademy.Infra.Storage;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -67,6 +69,17 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddProblemDetails();
 
+//PayPal
+builder.Services.Configure<PayPalSettings>(builder.Configuration.GetSection("PayPal"));
+
+builder.Services.AddHttpClient<IPaymentGateway, PayPalPaymentGateway>((sp, client) =>
+{
+    var settings = sp.GetRequiredService<IOptions<PayPalSettings>>().Value;
+    client.BaseAddress = new Uri(settings.BaseUrl);
+});
+
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+
 // JWT Configuration
 var jwt = builder.Configuration.GetSection("Jwt").Get<JwtSetting>(); // using the setting here in the program
 builder.Services.Configure<JwtSetting>(builder.Configuration.GetSection("jwt")); // di so if any class needs it it can use it 
@@ -84,7 +97,7 @@ options.TokenValidationParameters = new TokenValidationParameters
     ClockSkew = TimeSpan.Zero
 });
 builder.Services.AddAuthorization();
-var app = builder.Build();  // -------------------
+var app = builder.Build();  // -----------------------------------
   
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
